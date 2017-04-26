@@ -26,10 +26,11 @@ public class ServerThread extends Thread
         	Token token = new Token();
         	PrintWriter out = new PrintWriter( mSocket.getOutputStream(), true );
             BufferedReader in = new BufferedReader( new InputStreamReader(mSocket.getInputStream()) );
-            
+            mId = Integer.valueOf( in.readLine() );
             // While there is no input left
 			while ( (inputLine = in.readLine()) != null )
 			{
+				System.out.println( "id = " + mId + " @port " + mSocket.getPort() );
 				outputLine = Services.invoke( inputLine, token );
 			    out.println(outputLine);
 			    
@@ -50,4 +51,5 @@ public class ServerThread extends Thread
 	}
 	
 	private Socket mSocket;
+	private int mId;
 }

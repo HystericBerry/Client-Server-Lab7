@@ -10,14 +10,15 @@ public class AppClient
 	public static void main(String[] args) throws IOException
 	{
 		// Check validity of executable arguments
-		if (args.length != 2)
+		if (args.length != 3)
 		{
-			System.out.println("Usage: java AppClient <host ip> <port number>");
+			System.out.println("Usage: java AppClient <host ip> <port number> <id>");
 			System.exit(1);
 		}
 		
 		String hostAddress = args[0];
 		int portNumber = Integer.parseInt( args[1] );
+		int id = Integer.parseInt( args[2] );
 		String[] request = {"nextEvenFib", "nextLargerRand", "nextPrime"};
 		
 		try
@@ -25,13 +26,15 @@ public class AppClient
 			// Initialize a new Socket
 			Socket socket = new Socket( hostAddress, portNumber );
 			PrintWriter out = new PrintWriter( socket.getOutputStream(), true );
-			BufferedReader in = new BufferedReader( new InputStreamReader(socket.getInputStream()) );
+			BufferedReader in = new BufferedReader( new InputStreamReader( socket.getInputStream()) );
 			String reply;
+			
+			out.println(id); // write id
 			
 			// Send 5 requests for each 3 services.
 			for ( int i = 0; i < 3; ++i )
 			{
-				for ( int j = 0; j < 5; ++j )
+				for ( int j = 0; j < 100; ++j )
 				{
 					System.out.println("Client requests: " + request[i]);
 					out.println(request[i]);

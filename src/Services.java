@@ -57,7 +57,7 @@ public class Services
 	{
 		Random rand = new Random();
 		
-		if( token.mRand == Integer.MAX_VALUE )
+		if( token.mRand == Integer.MAX_VALUE - 1 )
 			token.mRand = 0; // wrap arround if max
 		token.mRand = token.mRand + rand.nextInt( Integer.MAX_VALUE - token.mRand );
 		return Integer.toString( token.mRand );
