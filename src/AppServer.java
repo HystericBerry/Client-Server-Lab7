@@ -17,11 +17,12 @@ public class AppServer
         
         try
         {
+        	Token countState = new Token();
         	// Start a new Thread to handle each Client separately.
         	ServerSocket serverSocket = new ServerSocket(portNumber);
         	while( true )
         	{
-        		new ServerThread( serverSocket.accept() ).start();
+        		new ServerThread( serverSocket.accept(), countState ).start();
         	}
         }
         catch(IOException e)

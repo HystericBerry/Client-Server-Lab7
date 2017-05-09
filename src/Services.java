@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.util.Random;
 
 public class Services
@@ -35,16 +36,20 @@ public class Services
 	 */
 	public static String nextEvenFib( Token token )
 	{
+		BigInteger nextFib = null;
 		do
 		{
-			// temp variable to store new Fibonacci numbers
-			long nextFib = token.mFib1 + token.mFib2;
-			
-			// shift newer Fibonacci numbers down
-			token.mFib1 = token.mFib2;
-			token.mFib2 = nextFib;
-		} while( (token.mFib2 & 1) != 0 ); // while Fib is odd.
-		return Long.toString( token.mFib2 );
+			nextFib = new BigInteger( token.getNextFib().toString() );
+		} while( !isEven( nextFib ) ); // while Fib is odd.
+		return nextFib.toString();
+	}
+	
+	public static Boolean isEven ( BigInteger decimal ) {
+		String value = decimal.toString();
+		Character end = value.charAt( value.length() - 1 );
+		Integer i = new Integer(end);
+		
+		return ( i & 1 ) == 0;
 	}
 	
 	/**
@@ -55,12 +60,7 @@ public class Services
 	 */
 	public static String nextLargerRand( Token token )
 	{
-		Random rand = new Random();
-		
-		if( token.mRand == Integer.MAX_VALUE - 1 )
-			token.mRand = 0; // wrap arround if max
-		token.mRand = token.mRand + rand.nextInt( Integer.MAX_VALUE - token.mRand );
-		return Integer.toString( token.mRand );
+		return token.nextRand();
 	}
 	
 	/**
@@ -71,11 +71,12 @@ public class Services
 	 */
 	public static String nextPrime( Token token )
 	{
+		BigInteger nextInt = null;
 		do
 		{
-			token.mPrime = token.mPrime + 1;
-		} while( !Services.isPrime( token.mPrime ) );
-		return Long.toString( token.mPrime );
+			nextInt = new BigInteger( token.getAndIncrement().toString() );
+		} while( !Services.isPrime( nextInt ) );
+		return nextInt.toString();
 	}
 	
 	/**
@@ -84,11 +85,19 @@ public class Services
 	 * @param n is the number to check whether it is prime or not.
 	 * @return true if n is even and false if n is odd.
 	 */
-	private static boolean isPrime( long n )
+	public static boolean isPrime( BigInteger number )
 	{
-		for( long i = 2; i < n; ++i )
-		{
-	        if( n % i == 0 )
+		if( !number.isProbablePrime(5) )
+			return false;
+
+	    BigInteger two = BigInteger.valueOf(2);
+	    if( !two.equals(number) && BigInteger.ZERO.equals(number.mod(two)) )
+	    	return false;
+
+	    BigInteger i;
+	    for( i = new BigInteger("3"); i.multiply(i).compareTo(number) < 1; i = i.add(two) )
+	    {
+	    	if ( BigInteger.ZERO.equals( number.mod(i) ) )
 	            return false;
 	    }
 	    return true;

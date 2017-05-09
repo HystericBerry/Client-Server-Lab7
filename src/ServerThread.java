@@ -10,9 +10,10 @@ import java.net.Socket;
  */
 public class ServerThread extends Thread
 {
-	public ServerThread( Socket serverSocket )
+	public ServerThread( Socket serverSocket, Token counter )
 	{
 		this.mSocket = serverSocket;
+		this.mCounter = counter;
 	}
 	
 	@Override
@@ -23,7 +24,7 @@ public class ServerThread extends Thread
         try
         {
         	// Get message from socket/ connection
-        	Token token = new Token();
+//        	Token token = new Token();
         	PrintWriter out = new PrintWriter( mSocket.getOutputStream(), true );
             BufferedReader in = new BufferedReader( new InputStreamReader(mSocket.getInputStream()) );
             mId = Integer.valueOf( in.readLine() );
@@ -31,7 +32,7 @@ public class ServerThread extends Thread
 			while ( (inputLine = in.readLine()) != null )
 			{
 				System.out.println( "id = " + mId + " @port " + mSocket.getPort() );
-				outputLine = Services.invoke( inputLine, token );
+				outputLine = Services.invoke( inputLine, mCounter );
 			    out.println(outputLine);
 			    
 			    // Technically, this is unnecessary
@@ -51,5 +52,6 @@ public class ServerThread extends Thread
 	}
 	
 	private Socket mSocket;
+	private Token mCounter;
 	private int mId;
 }
