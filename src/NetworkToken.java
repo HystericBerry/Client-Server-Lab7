@@ -4,7 +4,7 @@ import java.util.Random;
 public class NetworkToken
 {
 	/**
-	 * This class represents a Session's state.
+	 * This class represents a Slient's Session state with the server.
 	 */
 	public NetworkToken()
 	{
@@ -13,6 +13,11 @@ public class NetworkToken
 		mRand = 0;
 	}
 	
+	/**
+	 * This method returns the next fibonacci whether it is even or odd.
+	 * 
+	 * @return the next fibonacci number - regardless of even or odd.
+	 */
 	public synchronized BigInteger getNextFib()
 	{
 		BigInteger temp1 = mFib1;
@@ -24,9 +29,15 @@ public class NetworkToken
 		return mFib2;
 	}
 	
+	/**
+	 * Gets the next random number larger than the previous. If the max integer 
+	 * is reached, this function wraps back around.
+	 * 
+	 * @return the next random larger number.
+	 */
 	public synchronized String nextRand()
 	{
-		// Technically not safe and not random.
+		// Using current date/ time is technically not safe and not random.
 		Random rand = new Random( System.currentTimeMillis() );
 		int temp = mRand;
 		if( temp == Integer.MAX_VALUE - 1 )
@@ -36,6 +47,12 @@ public class NetworkToken
 		return Integer.toString( this.mRand );
 	}
 	
+	/**
+	 * This method increments a counter. This counter keeps track of which number to 
+	 * check next for its primality.
+	 * 
+	 * @return the next number to check for primality
+	 */
 	public synchronized BigInteger getAndIncrement()
 	{
 		BigInteger temp = new BigInteger( mPrime.toString() );

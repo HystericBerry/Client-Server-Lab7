@@ -1,6 +1,14 @@
-
+/**
+ * This class represents the middle layer responsible for maintaining the request and response queues.
+ */
 public class runtimeThr extends Thread
 {
+	/**
+	 * This constructor creates an instance of a runtime thread.
+	 * 
+	 * @param sessInfo is the Client Session Information that contains host address, 
+	 * port number and client id.
+	 */
 	public runtimeThr( AppClient.SessionInfo sessInfo )
 	{
 		counter = 0;
@@ -14,8 +22,13 @@ public class runtimeThr extends Thread
 	
 	public void run()
 	{
+		// we know how many service calls to expect
+		// unfortunately, we did not have any timeout codes in the case a service call
+		// fails for some reason (due to code complexity)
 		while( counter < TOTAL_SERVICE_CALLS )
 		{
+			// Depending on the ServiceTicket at the front, create an instance of 
+			// LocalThr or NetworkThr.
 			ServiceTicket request = null, response = null;
 			if( (request = AppClient.mRequestQue.poll()) != null )
 			{
@@ -38,11 +51,12 @@ public class runtimeThr extends Thread
 					
 			}
 			
+			// Notify the uThr at the front of the queue if the queue is not null.
 			if( (response = AppClient.mResponseQue.poll()) != null )
 			{
 				// keep track of uThr and get appropriate uThr
 				uThr currUThread = AppClient.mUThreads.get( response.mUThreadId );
-				currUThread.mResponses.add( response );
+				currUThread.mResponses.add( response ); // "Notifies" the uUtr.
 				++counter;
 			}
 		}

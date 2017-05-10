@@ -6,7 +6,6 @@ import java.net.Socket;
 
 /**
  * A ServerThread represents a single Client Server Session.
- * 
  */
 public class ServerThread extends Thread
 {
@@ -32,8 +31,6 @@ public class ServerThread extends Thread
 			{
 				outputLine = Services.invoke( inputLine, mCounter );
 			    out.println(outputLine);
-			    
-			    System.out.println( "" + inputLine );
 			}
 			
 			// successfully end a Client's session
