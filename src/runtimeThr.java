@@ -3,6 +3,10 @@ public class runtimeThr extends Thread
 {
 	public runtimeThr( AppClient.SessionInfo sessInfo )
 	{
+		counter = 0;
+
+		TOTAL_SERVICE_CALLS = AppClient.NUM_UTHREADS * uThr.TOTAL_REQUESTS;
+		
 		mSessInfo = sessInfo;
 		mClientId = sessInfo.clientId;
 		mCounter = new LocalToken();
@@ -10,7 +14,7 @@ public class runtimeThr extends Thread
 	
 	public void run()
 	{
-		while( true )
+		while( counter < TOTAL_SERVICE_CALLS )
 		{
 			ServiceTicket request = null, response = null;
 			if( (request = AppClient.mRequestQue.poll()) != null )
@@ -19,18 +23,17 @@ public class runtimeThr extends Thread
 				{
 				case NEXTEVEN:
 				case NEXTODD:
-					LocalThr currLocalThr = new LocalThr( request, mCounter );
-					currLocalThr.start();
+					new LocalThr( request, mCounter ).start();
 					break;
 				case NEXTEVENFIB:
 				case NEXTLARGERRAND:
 				case NEXTPRIME:
 					// create network instance here
-					NetworkThr netThread = new NetworkThr( mSessInfo , request.mService, request.mUThreadId ); // host address, port number, request
-					netThread.start();
+					new NetworkThr( mSessInfo , request, request.mUThreadId ).start();
 					break;
 				default:
-					throw new RuntimeException("Cannot create a local or network thread because the requested service is invalid.");
+					throw new RuntimeException("Cannot create a local or network thread "
+							+ "because the requested service is invalid.");
 				}
 					
 			}
@@ -40,11 +43,14 @@ public class runtimeThr extends Thread
 				// keep track of uThr and get appropriate uThr
 				uThr currUThread = AppClient.mUThreads.get( response.mUThreadId );
 				currUThread.mResponses.add( response );
+				++counter;
 			}
 		}
 	}
 	
-	public int mClientId;
+	public int mClientId, counter;
 	LocalToken mCounter;
 	private AppClient.SessionInfo mSessInfo;
+	
+	public final int TOTAL_SERVICE_CALLS;
 }

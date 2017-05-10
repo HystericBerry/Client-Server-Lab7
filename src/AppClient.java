@@ -1,8 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -10,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AppClient
 {
-	@SuppressWarnings("resource")
 	public static void main(String[] args) throws IOException
 	{
 		// Check validity of executable arguments
@@ -39,12 +34,8 @@ public class AppClient
 		runtimeThr mRuntimeThread = new runtimeThr( sessInfo );
 		mRuntimeThread.start();
 		
-		// create 8 or more uThr which should put requests into the runtimeThr queue...
-		int numUThreads = 8;
-		
-		
 		// queue can be instantiated in the main
-		for( int i = 0; i < numUThreads; ++i )
+		for( int i = 0; i < NUM_UTHREADS; ++i )
 		{
 			uThr currUThread = new uThr( i );
 			mUThreads.add( currUThread );
@@ -60,5 +51,5 @@ public class AppClient
 	
 	public static Queue<ServiceTicket> mRequestQue, mResponseQue;
 	public static List<uThr> mUThreads;
-	
+	public static final int NUM_UTHREADS = 8;
 }

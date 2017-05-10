@@ -7,13 +7,13 @@ import java.net.Socket;
 public class NetworkThr extends Thread {
 	
 	String hostAddress;
-	uThr.ServiceName request;
+	ServiceTicket mRequest;
 	int portNumber, uId;
 	
-	public NetworkThr( AppClient.SessionInfo sessInfo, uThr.ServiceName request, int uThreadId )
+	public NetworkThr( AppClient.SessionInfo sessInfo, ServiceTicket request, int uThreadId )
 	{
 		this.hostAddress = sessInfo.hostAddress;
-		this.request = request;
+		this.mRequest = request;
 		this.portNumber = sessInfo.portNumber;
 		this.uId = uThreadId;
 	}
@@ -26,14 +26,13 @@ public class NetworkThr extends Thread {
 			PrintWriter out = new PrintWriter( socket.getOutputStream(), true );
 			BufferedReader in = new BufferedReader( new InputStreamReader( socket.getInputStream()) );
 
-			out.println( request.getServiceName() ); // sending request TO the Server
+			out.println( mRequest.mService.getServiceName() ); // sending request TO the Server
 			
-			ServiceTicket respTicket = new ServiceTicket( uId ); // THIS ID NEEDS TO BE UTHR ID
+			mRequest.mMessage = in.readLine();
+			socket.close();
 			
-			respTicket.mMessage = in.readLine();
 			
-			
-			AppClient.mResponseQue.add( respTicket );
+			AppClient.mResponseQue.add( mRequest );
 		}
 		catch (IOException e){
 			System.out.println("Couldn't get I/O for connection to " + hostAddress);

@@ -20,8 +20,6 @@ public class Services
 			return Services.nextLargerRand( token );
 		case "nextPrime":
 			return Services.nextPrime( token );
-		case "End Protocol.":
-			return "Bye.";
 		default:
 			throw new IllegalArgumentException( "Unexpected service request occurred: " + service );
 		}

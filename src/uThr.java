@@ -4,9 +4,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class uThr extends Thread
 {
-	private static final int TOTAL_REQUESTS = 20;
+	public static final int TOTAL_REQUESTS = 20;
 	
-	// Some code goes here.
 	public uThr( int id )
 	{
 		mId = id;
@@ -17,19 +16,14 @@ public class uThr extends Thread
 	@Override
 	public void run()
 	{
-		// 20 iterations
-		ServiceName[] services = ServiceName.values();
-		
 		int i = 0;
 		while( counter < TOTAL_REQUESTS )
 		{
 			// requests 20 times
 			if( i < TOTAL_REQUESTS )
 			{
-				Random rand = new Random( System.currentTimeMillis() );
 				ServiceTicket ticket = new ServiceTicket( mId );
-				
-				ticket.mService = services[rand.nextInt(5)]; // problem child?
+				ticket.mService = services[rand.nextInt(5)];
 				
 				AppClient.mRequestQue.add( ticket );
 				++i;
@@ -40,30 +34,19 @@ public class uThr extends Thread
 			if( (response = mResponses.poll()) != null )
 			{
 				uThr.ServiceName service = response.mService;
-				
-				if( service == null )
-					System.out.println( "Hey... service is null?" );
-				
 				String result = response.mMessage;
-				if( result == null )
-					System.out.println( "result was null???" );
-				
 				
 				++counter;
 				System.out.printf("uThr<%d> %s : %s\n", response.mUThreadId, service.getServiceName(), result);
 			}
 			
 		}
-		// At each iteration a uThr randomly selects one of 5 commands 
-		// (nextEven, nextOdd, nextEvenFib, nextLargerRand, nextPrime) 
-		// to enqueue in the requestQue, along with any other needed 
-		// pieces of data, and waits for the result produced by this 
-		// command. After its result is enqueued in the returnQue, 
-		// this thread fetches the returned value and outputs on the terminal.
 	}
 	
 	int mId, counter;
 	Queue<ServiceTicket> mResponses;
+	private static ServiceName[] services = ServiceName.values();
+	private static final Random rand = new Random( System.currentTimeMillis() );
 	
 	public enum ServiceName {
 		NEXTEVEN("nextEven"), NEXTODD("nextOdd"), NEXTEVENFIB("nextEvenFib"), 
