@@ -10,7 +10,7 @@ public class Services
 	 * @param token is the representation of a Client's Stateful Session.
 	 * @return
 	 */
-	public static String invoke( String service, Token token )
+	public static String invoke( String service, NetworkToken token )
 	{
 		switch( service )
 		{
@@ -34,7 +34,7 @@ public class Services
 	 * @param token is the representation of a Client's Stateful Session.
 	 * @return the next Even Fibonacci number given the Session's previous state.
 	 */
-	public static String nextEvenFib( Token token )
+	public static String nextEvenFib( NetworkToken token )
 	{
 		BigInteger nextFib = null;
 		do
@@ -58,7 +58,7 @@ public class Services
 	 * @param token is the representation of a Client's Stateful Session.
 	 * @return the next Larger Random number given the Session's previous state.
 	 */
-	public static String nextLargerRand( Token token )
+	public static String nextLargerRand( NetworkToken token )
 	{
 		return token.nextRand();
 	}
@@ -69,7 +69,7 @@ public class Services
 	 * @param token is the representation of a Client's Stateful Session.
 	 * @return the next Prime number given the Session's previous state.
 	 */
-	public static String nextPrime( Token token )
+	public static String nextPrime( NetworkToken token )
 	{
 		BigInteger nextInt = null;
 		do
@@ -89,11 +89,11 @@ public class Services
 	{
 		if( !number.isProbablePrime(5) )
 			return false;
-
+		
 	    BigInteger two = BigInteger.valueOf(2);
 	    if( !two.equals(number) && BigInteger.ZERO.equals(number.mod(two)) )
 	    	return false;
-
+	    
 	    BigInteger i;
 	    for( i = new BigInteger("3"); i.multiply(i).compareTo(number) < 1; i = i.add(two) )
 	    {

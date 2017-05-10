@@ -17,7 +17,7 @@ public class AppServer
         
         try
         {
-        	Token countState = new Token();
+        	NetworkToken countState = new NetworkToken();
         	// Start a new Thread to handle each Client separately.
         	ServerSocket serverSocket = new ServerSocket(portNumber);
         	while( true )

@@ -1,12 +1,12 @@
 import java.math.BigInteger;
 import java.util.Random;
 
-public class Token
+public class NetworkToken
 {
 	/**
 	 * This class represents a Session's state.
 	 */
-	public Token()
+	public NetworkToken()
 	{
 		mFib1 = new BigInteger("0"); mFib2 = new BigInteger("1");
 		mPrime = new BigInteger("1");

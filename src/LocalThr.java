@@ -1,41 +1,29 @@
-import java.util.Queue;
 
-public class LocalThr implements Runnable{
+public class LocalThr extends Thread
+{
+	ServiceTicket mTicket;
+	LocalToken mCounter;
 	
-	int value;
-	String request;
-	
-	public LocalThr(String request, int value){
-		this.request = request;
-		this.value = value;
-	}
-	
-	public void run() {
-		String result;
-		if (request.equals("nextOdd"))
-			result = nextOdd();
-		else if (request.equals("nextEven"))
-			result = nextEven();
-		AppClient.resultQue.add(result);
-	}
-	
-	public String nextOdd()
+	public LocalThr( ServiceTicket ticket, LocalToken counter )
 	{
-		if (value % 2 == 0)
-			return Long.toString(value + 2 );
-		return Long.toString(value + 1);
+		this.mTicket = ticket;
+		mCounter = counter;
 	}
 	
-	public String nextEven()
+	public void run()
 	{
-		if (value % 2 == 0)
-			return Long.toString(value + 1 );
-		return Long.toString(value + 2);
+		switch( mTicket.mService )
+		{
+		case NEXTEVEN:
+			mTicket.mMessage = mCounter.nextEven();
+			break;
+		case NEXTODD:
+			mTicket.mMessage = mCounter.nextOdd();
+			break;
+		default:
+			throw new RuntimeException("Error occured: Service Requested is neither nextEven nor nextOdd.\n");
+		}
+		
+		AppClient.mResponseQue.add( mTicket );
 	}
-	
-//	public static void main(String args[]) {
-//		Runnable t1 = new LocalThr(request, value);
-//		new Thread(t1).start();
-//	}
-	
 }
