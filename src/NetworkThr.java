@@ -4,12 +4,20 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * 
+ * Class for thread that handles requests for services to be fulfilled by server software
+ *
+ */
 public class NetworkThr extends Thread {
 	
 	String hostAddress;
 	ServiceTicket mRequest;
 	int portNumber, uId;
 	
+	/**
+	 * Constructor 
+	 */
 	public NetworkThr( AppClient.SessionInfo sessInfo, ServiceTicket request, int uThreadId )
 	{
 		this.hostAddress = sessInfo.hostAddress;
@@ -18,6 +26,11 @@ public class NetworkThr extends Thread {
 		this.uId = uThreadId;
 	}
 	
+	/**
+	 * Implementation of thread run() method
+	 * Thread calls for requested service from server and enqueues 
+	 * response to responseQue
+	 */
 	public void run()
 	{
 		try{
@@ -28,10 +41,10 @@ public class NetworkThr extends Thread {
 
 			out.println( mRequest.mService.getServiceName() ); // sending request TO the Server
 			
-			mRequest.mMessage = in.readLine();
+			mRequest.mMessage = in.readLine();	// read response from server
 			socket.close();
 			
-			
+			// add server response to responseQue
 			AppClient.mResponseQue.add( mRequest );
 		}
 		catch (IOException e){
